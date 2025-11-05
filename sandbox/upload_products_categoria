@@ -1,0 +1,91 @@
+# import_products.py
+
+import pandas as pd
+import psycopg2
+import psycopg2.extras
+import os
+
+# --- CONFIGURAÇÕES ---
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_NAME = os.getenv("DB_NAME", "layout_requests_db")
+DB_USER = os.getenv("DB_USER", "user")
+DB_PASS = os.getenv("DB_PASSWORD", "password")
+DB_PORT = os.getenv("DB_PORT", "5432")
+
+EXCEL_FILE_PATH = r"C:\Users\Marcos\Documents\products.xlsx" # Caminho para sua planilha
+TABLE_NAME = "products"
+
+def import_products_from_excel():
+    """
+    Lê produtos de uma planilha Excel e os insere em lote no banco de dados PostgreSQL.
+    """
+    # 1. Ler a planilha com o pandas
+    try:
+        print(f"Lendo dados de '{EXCEL_FILE_PATH}'...")
+        df = pd.read_excel(EXCEL_FILE_PATH)
+        # Renomeia as colunas para corresponder à tabela do DB (ajuste se necessário)
+        df.rename(columns={
+            'código': 'product_code',
+            'nome': 'product_name',
+            'unidade': 'unit'
+        }, inplace=True)
+        print(f"{len(df)} produtos encontrados na planilha.")
+    except FileNotFoundError:
+        print(f"ERRO: Arquivo '{EXCEL_FILE_PATH}' não encontrado.")
+        return
+    except Exception as e:
+        print(f"ERRO ao ler o arquivo Excel: {e}")
+        return
+
+    conn = None
+    try:
+        # 2. Conectar ao banco de dados
+        conn = psycopg2.connect(
+            host=DB_HOST,
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASS,
+            port=DB_PORT
+        )
+        cursor = conn.cursor()
+        print("Conexão com PostgreSQL estabelecida.")
+
+        # 3. Preparar os dados para inserção em lote
+        # Converte o DataFrame em uma lista de tuplas
+        data_tuples = list(df.itertuples(index=False, name=None))
+
+        # 4. Criar a query SQL para inserção em lote
+        # ON CONFLICT (product_code) DO NOTHING: Se um produto com o mesmo código já existir, ele será ignorado.
+        # Alternativa: DO UPDATE SET product_name = EXCLUDED.product_name, unit = EXCLUDED.unit; para atualizar.
+        query = """
+            INSERT INTO products (product_code, product_name, unit)
+            VALUES %s
+            ON CONFLICT (product_code) DO NOTHING;
+        """
+
+        # 5. Executar a inserção em lote (UPSERT)
+        print("Iniciando a inserção em lote no banco de dados...")
+        psycopg2.extras.execute_values(
+            cursor,
+            query,
+            data_tuples,
+            page_size=1000  # Insere de 1000 em 1000 registros
+        )
+        
+        # 6. Finalizar a transação
+        conn.commit()
+        print(f"SUCESSO! {cursor.rowcount} produtos foram inseridos/atualizados no banco de dados.")
+
+    except psycopg2.Error as e:
+        print(f"ERRO de banco de dados: {e}")
+        if conn:
+            conn.rollback() # Desfaz a transação em caso de erro
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+            print("Conexão com PostgreSQL fechada.")
+
+
+if __name__ == "__main__":
+    import_products_from_excel()

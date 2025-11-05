@@ -1,0 +1,59 @@
+{
+    "fonts": {
+        "description-desq": {
+        "font-name": "Poppins-SemiBold",
+        "font-size": 18,
+        "font-color": [255,255,255]
+        },
+        "price-desq": {
+        "font-name": "Poppins-Bold",
+        "real-size": 42,
+        "cent-size": 15,
+        "unit-size": 2,
+        "font-color": [169,30,16]
+        },
+        "obsevation-desq": {
+        "font-name": "Poppins-Bold",
+        "size": 10,
+        "font-color": [255,255,255]
+        },
+        "porcentage-desq": {
+        "font-name": "Poppins-Bold",
+        "porcentage-size": 62,
+        "description-size": 15,
+        "unit-size": 17,
+        "font-color": [31,106,203]
+        },
+
+        "separador":{
+            "space": "----------------------------------------------------------"
+        },
+
+        "description": {
+        "font-name": "Poppins-SemiBold",
+        "font-size": 12,
+        "font-color": [0,0,0]
+        },
+        "price": {
+        "font-name": "Poppins-Bold",
+        "real-size": 32,
+        "cent-size": 14,
+        "unit-size": 2,
+        "font-color": [255,255,255]
+        },
+
+        "obsevation": {
+        "font-name": "Poppins-Bold",
+        "size": 10,
+        "font-color": [255,255,255]
+        },
+
+        "porcentage": {
+        "font-name": "Poppins-Bold",
+        "porcentage-size": 48,
+        "description-size": 11,
+        "unit-size": 16,
+        "font-color": [255,255,255]
+        }
+    }
+}

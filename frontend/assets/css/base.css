@@ -1,0 +1,21 @@
+:root {
+    --border-radius-1: 2px;
+    --bg-main: #f5f5f5;
+    --bg-sidebar: #2c2c2c;
+    --text-light: #fff;
+    --text-muted: #666;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-main);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}

@@ -1,0 +1,50 @@
+
+services:
+  # Serviço da sua API
+  api:
+    container_name: layout_api_service_encarteai
+    build:
+      context: ./backend/productGen  # O Dockerfile está na pasta productGen
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db # A API só vai iniciar depois que o banco de dados estiver pronto
+
+  
+  # Serviço do Banco de Dados PostgreSQL
+  db:
+    container_name: postgres_db_encarteai
+    image: postgres:15-alpine # Imagem oficial e leve do Postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: layout_requests_db
+    ports:
+      - "5432:5432" # Expõe a porta do Postgres para sua máquina local
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Garante que os dados persistam
+    networks:
+      - encarteai_network
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_servicer_encarteai
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 211520
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - encarteai_network
+
+volumes:
+  postgres_data: # Define o volume para persistência dos dados
+  pgadmin_data: # Define o volume para persistência dos dados do pgAdmin
+
+networks:
+  encarteai_network:
+    driver: bridge

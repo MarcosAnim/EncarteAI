@@ -1,0 +1,12 @@
+{
+    "python.analysis.extraPaths": [
+        "./xlsx_code"
+    ],
+    "python-envs.pythonProjects": [
+        {
+            "path": "xlsx_code/test.py",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
+        }
+    ]
+}
