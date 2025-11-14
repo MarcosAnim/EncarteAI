@@ -4,7 +4,7 @@ services:
   api:
     container_name: layout_api_service_encarteai
     build:
-      context: ./backend/productGen  # O Dockerfile está na pasta productGen
+      context: ./server/core  # O Dockerfile está na pasta productGen
     ports:
       - "5000:5000"
     depends_on:

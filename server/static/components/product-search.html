@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Produtos</title>
+    <style>
+        .result-item {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .score {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Busca de Produtos</h2>
+        <input type="text" id="searchInput" placeholder="Digite o nome do produto...">
+        <button id="searchButton">Buscar</button>
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        import { findSimilarProducts } from '../assets/js/productSearch.js';
+
+        // Esperar o DOM carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchButton = document.getElementById('searchButton');
+            const searchInput = document.getElementById('searchInput');
+            const resultsDiv = document.getElementById('results');
+
+            // Adicionar event listener no botão
+            searchButton.addEventListener('click', async () => {
+                try {
+                    resultsDiv.innerHTML = 'Buscando...';
+                    const results = await findSimilarProducts(searchInput.value);
+                    
+                    // Limpar e mostrar resultados
+                    resultsDiv.innerHTML = '';
+                    results.forEach(produto => {
+                        const div = document.createElement('div');
+                        div.className = 'result-item';
+                        div.innerHTML = `
+                            <strong>${produto.name}</strong><br>
+                            Código: ${produto.code}<br>
+                            Unidade: ${produto.unit}<br>
+                            <span class="score">Score: ${produto.score.toFixed(3)}</span>
+                        `;
+                        resultsDiv.appendChild(div);
+                    });
+                } catch (error) {
+                    resultsDiv.innerHTML = `<p style="color: red">Erro: ${error.message}</p>`;
+                }
+            });
+
+            // Adicionar busca ao pressionar Enter no input
+            searchInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    searchButton.click();
+                }
+            });
+        });
+    </script>
+    </script>
+</body>
+</html>
