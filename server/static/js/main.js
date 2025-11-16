@@ -99,49 +99,122 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
 
-        
-        // Search box para procurar produtos
+        // Interação com o searchbar e busca de produtos
+
         const usersearch = document.getElementById('searchInput');
         const searchbutton = document.querySelector('.product-input button');
+        const searchResults = document.getElementById('searchResults');
+        const productInput = document.querySelector('.product-input');
 
-        function clearOldResults(value) {
-            value.innerHTML = '';
-        };
+        function clearOldResults() {
+            searchResults.innerHTML = '';
+            searchResults.classList.remove('show', 'empty');
+        }
 
-        searchbutton.addEventListener('click', async (e) => {
-            const searchResults = document.getElementsByClassName('result-box');
-            clearOldResults(searchResults[0]);
-            const querysearch = await findSimilarProducts(usersearch.value, 10, 0.25);
+        function showEmptyState() {
+            searchResults.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">🔍</div>
+                    <div>Nenhum produto encontrado</div>
+                </div>
+            `;
+            searchResults.classList.add('show', 'empty');
+        }
+
+        async function performSearch() {
+            const query = usersearch.value.trim();
             
+            if (!query) {
+                clearOldResults();
+                return;
+            }
 
-            querysearch.forEach(item => {
-                const itemCode = item.code;
-                const itemName = item.name;
-                const itemUnit = item.unit;
+            // Adiciona estado de loading
+            productInput.classList.add('loading');
+            clearOldResults();
+
+            try {
+                const results = await findSimilarProducts(query, 10, 0.25);
                 
-                const itemlist = document.createElement('li');
-                itemlist.className = 'product-db-response';
-                itemlist.id = `${itemCode}`;
-                itemlist.innerHTML = `${itemName}`;
-                searchResults[0].appendChild(itemlist);
-            });
+                // Remove loading
+                productInput.classList.remove('loading');
 
+                if (results.length === 0) {
+                    showEmptyState();
+                    return;
+                }
+
+                // Adiciona badge com contagem
+                const countBadge = document.createElement('div');
+                countBadge.className = 'results-count';
+                countBadge.textContent = `${results.length} resultado${results.length > 1 ? 's' : ''} encontrado${results.length > 1 ? 's' : ''}`;
+                searchResults.appendChild(countBadge);
+
+                // Adiciona resultados com delay escalonado para animação
+                results.forEach((item, index) => {
+                    const itemlist = document.createElement('li');
+                    itemlist.className = 'product-db-response';
+                    itemlist.id = item.code;
+                    itemlist.innerHTML = `
+                        <span>${item.name}</span>
+                        <small style="margin-left: auto; color: #6a6a6a; font-size: 12px;">${item.unit}</small>
+                    `;
+                    itemlist.style.animationDelay = `${index * 0.05}s`;
+                    searchResults.appendChild(itemlist);
+                });
+
+                searchResults.classList.add('show');
+            } catch (error) {
+                productInput.classList.remove('loading');
+                console.error('Erro na busca:', error);
+                searchResults.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <div>Erro ao buscar produtos</div>
+                    </div>
+                `;
+                searchResults.classList.add('show', 'empty');
+            }
+        }
+
+        // Event listener para botão
+        searchbutton.addEventListener('click', performSearch);
+
+        // Event listener para Enter
+        usersearch.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performSearch();
+            }
         });
 
+        // Busca em tempo real (opcional - remova se não quiser)
+        let debounceTimer;
+        usersearch.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                if (e.target.value.length >= 3) {
+                    performSearch();
+                } else if (e.target.value.length === 0) {
+                    clearOldResults();
+                }
+            }, 300);
+        });
 
-        
-        // Selecionar produto da lista de resultados
-        const searchResultsBox = document.querySelector('#searchResults');
-
-        searchResultsBox.addEventListener('click', async (e) => {
-            const selectedProduct =  e.target.closest('li');
+        // Selecionar produto da lista
+        searchResults.addEventListener('click', async (e) => {
+            const selectedProduct = e.target.closest('li.product-db-response');
             if (!selectedProduct) return;
 
+            // Feedback visual
+            selectedProduct.style.background = '#2a2a2a';
+            
             const bundle = {
                 code: selectedProduct.id,
-                name: selectedProduct.innerText
-            }
-            // enviar produto selecionado para o maker.html
+                name: selectedProduct.querySelector('span').innerText
+            };
+
+            // Enviar produto selecionado
             const sendProduct = document.querySelector('.main-container');
 
             if (sendProduct?.contentWindow) {
@@ -149,11 +222,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     type: 'ADD_PRODUCT',
                     data: bundle
                 }, "*");
-                console.log('Produto enviado para o maker:', bundle);
+                console.log('Produto enviado:', bundle);
+                
+                // Limpa busca após seleção
+                setTimeout(() => {
+                    usersearch.value = '';
+                    clearOldResults();
+                }, 500);
             } else {
-                console.error('Iframe não encontrado ou não carregado.');
+                console.log('Produto selecionado:', bundle);
             }
-        })
-        
+        });
+
+        // Fechar resultados ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.function-section')) {
+                clearOldResults();
+            }
+        });
     
     });

@@ -13,7 +13,7 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Montserrat', 'Inter', 'Segoe UI', Roboto, sans-serif;
     background: var(--bg-main);
     display: flex;
     height: 100vh;
