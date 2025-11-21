@@ -62,7 +62,7 @@
     cursor: pointer;
 }
 
-/* dropdown */
+/* dropdown user configs*/
 .dropdown-user-section {
     position: absolute;
     top: 10%;
@@ -102,6 +102,7 @@
 .menu-items {
     list-style: none;
     padding: 10% 0%;
+    height: 50%;
 }
 
 .menu-items li {
@@ -130,7 +131,7 @@
 
 /* rodapé e ads */
 .ad-frame {
-    margin-top: auto;
+    margin-top: 0px;
     padding: 40px 20px;
     background: #d0d0d0;
     border-radius: var(--border-radius-1);
@@ -166,9 +167,8 @@
     padding: 20px;
 }
 
-
 /* Seção searchbar */
-.function-section {
+.search-section {
     max-width: 600px;
     margin: 50px auto;
     position: relative;
@@ -177,17 +177,16 @@
 .product-input {
     display: flex;
     align-items: center;
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
+    background: #d9d9d9;
     border-radius: 12px;
-    padding: 8px 16px;
+    padding: 2px 16px;
     transition: all 0.3s ease;
     position: relative;
 }
 
 .product-input:focus-within {
-    border-color: #3a3a3a;
-    background: #1e1e1e;
+    border-color: #f8fafa;
+    background: #ffffff;
 }
 
 .product-input input {
@@ -197,7 +196,7 @@
     font-size: 16px;
     padding: 12px 8px;
     background: transparent;
-    color: #e0e0e0;
+    color: #5c5c5c;
 }
 
 .product-input input::placeholder {
@@ -205,7 +204,8 @@
 }
 
 .product-input button {
-    background: #2a2a2a;
+    background: transparent;
+    pointer-events: none;
     border: none;
     cursor: pointer;
     font-size: 18px;
@@ -217,10 +217,6 @@
     justify-content: center;
     min-width: 44px;
     height: 44px;
-}
-
-.product-input button:hover {
-    background: #3a3a3a;
 }
 
 .product-input button:active {
@@ -355,7 +351,7 @@
 
 /* Responsividade */
 @media (max-width: 768px) {
-    .function-section {
+    .search-section {
         margin: 20px auto;
     }
 
@@ -400,4 +396,46 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+/* Seção de upload de produto */
+.upload-product {
+    
+    padding: 20px;
+    width: 300px;
+}
+
+.image-input {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: transparent;
+    color: #909090;
+}
+
+.image-input:hover {
+    border-color: #4a90e2;
+    background: #f0f7ff;
+}
+
+.image-input input {
+    display: none;
+}
+
+.preview {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.preview img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #eee;
 }

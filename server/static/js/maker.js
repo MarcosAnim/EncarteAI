@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.remove();
                 console.log('Produto removido');
         }});
-
+        
         /* Fução para descelecionar itens de uma lista */
         function clearSelection(list) {
             list.querySelectorAll('.product-card.active').forEach(item => {
                 item.classList.remove('active');
         })}
-           
+        
         /* produt selecionado na lista de produtos presentes*/
         productGrid.addEventListener('click', (e) => {
             if (e.target.classList.contains('product-image') || e.target.closest('.product-card')) {

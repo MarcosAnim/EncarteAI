@@ -34,12 +34,20 @@
 
         </div>
 
-        <div class="function-section">
+        <div class="search-section">
             <form class="product-input" autocomplete="on">
-                <input type="text" id="searchInput" placeholder="Digite para buscar produto..." />
-                <button type="button">🔍</button>
+                <input type="text" id="searchInput" placeholder="Buscar produto..." />
+                <button type="button">+</button>
             </form>
             <ul id="searchResults" class="result-box"></ul>
+        </div>
+
+        <div class="upload-product">
+            <div class="image-input" onclick="document.getElementById('img').click()">
+                <div>📷</div>
+                <p>Importar produto</p>
+                <input type="file" id="img" accept="image/*" multiple onchange="showPreview(event)">
+            </div>
         </div>
 
         <ul class="menu-items">

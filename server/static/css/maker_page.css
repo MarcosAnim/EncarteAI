@@ -86,15 +86,16 @@
 }
 
 .config-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: row;
     gap: 20px;
 }
 
 .product-display {
     display: flex;
+    width: 60%;
     justify-content: center;
-    background: #f9f9f9; 
+    background: #f3f3f3; 
     padding: 30px;
     border-radius: var(--border-radius-1);
     text-align: center;
@@ -107,6 +108,7 @@
 .config-form {
     display: flex;
     flex-direction: column;
+    width: 40%;
     gap: 15px;
 }
 
@@ -128,6 +130,10 @@
     border: 1px solid #ddd;
     border-radius: var(--border-radius-1);
     font-size: 14px;
+}
+
+#color-picker input{
+    width: 50%;
 }
 
 .toggle-group {
@@ -167,12 +173,14 @@
 
 .slider-group {
     display: flex;
+    width: 50%;
     align-items: center;
     gap: 10px;
 }
 
 .slider-group input[type="range"] {
     flex: 1;
+    width: 30%;
 }
 
 .action-buttons {
@@ -192,7 +200,7 @@
 }
 
 .btn-delete {
-    background: #e74c3c;
+    background: #d0d0d0;
     color: white;
 }
 
